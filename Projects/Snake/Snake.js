@@ -2,10 +2,19 @@ let rightPressed = false;
 let leftPressed = false;
 let upPressed = false;
 let downPressed = false;
+let enterPressed = false;
+let hPressed = false;
+let died = false;
 let score = 0;
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
-ctx.font = "20px Georgia";
+let bgMusic = new Audio('main theme.wav');
+let munch = new Audio('snake eating.wav');
+let mainMenu = new Image(); mainMenu.src = "Title Screen.png"
+let helpScreen = new Image(); helpScreen.src = "Help Screen.png"
+let background = new Image(); background.src = "background.png"
+let deathScreen = new Image(); deathScreen.src = "deathScreen.png"
+ctx.font = "80px Georgia";
 let moves = [];
 for(let i = 0; i<1; i++){
     moves[i] = 0;
@@ -40,6 +49,7 @@ class Snake{
 
     collosion(){
         if(this.x == candy.x && this.y == candy.y){
+            munch.play();
             candy.randomLocation();
             score++;
             let temp = [];
@@ -55,7 +65,6 @@ class Snake{
 
         for(let i = 2; i<moves.length; i++){
             if(this.x == getX(i) && this.y == getY(i)){
-                alert("you hit yourself... Your score is: " + score)
                 death();
             }
                 
@@ -117,6 +126,11 @@ function keyDownHandler(e) {
         leftPressed = true;
     }else if (e.key == "D"|| e.key == "d"){
         rightPressed = true;
+    }else if (e.key === 'Enter') {
+        enterPressed = true;
+        died = false;
+    }else if (e.key == "H"|| e.key == "h"){
+        hPressed = true;
     }
     
     
@@ -138,27 +152,41 @@ function keyUpHandler(e) {
 done = true;
 direction = "e";
 once = true;
+let interval2;
 function draw(){
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if(once){
-        candy.randomLocation();
-        once = false;
+    
+    if(enterPressed){
+        bgMusic.play();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(background,0,0,canvas.width,canvas.height)
+        if(once){
+            candy.randomLocation();
+            interval2 = setInterval(Move, 220);
+            once = false;
+        }
+        
+        candy.drawCandy();
+        player.drawSnakeBody();
+        player.collosion();
+        
+        
+        if(rightPressed && direction != "w"){
+            direction = "e"
+        }else if(leftPressed && direction != "e"){ 
+            direction = "w"
+        }else if(downPressed && direction != "n"){
+            direction = "s"
+        }else if(upPressed && direction != "s"){
+            direction = "n"
+        }
+    }else if (hPressed){
+        ctx.drawImage(helpScreen,0,0,canvas.width,canvas.height)
+    }else if (!died){
+        ctx.clearRect(0,0,canvas.width,canvas.height)
+        ctx.drawImage(mainMenu,0,0,canvas.width,canvas.height)
+        bgMusic.play()
     }
-    
-    candy.drawCandy();
-    player.drawSnakeBody();
-    player.collosion();
-    
-    
-    if(rightPressed && direction != "w"){
-        direction = "e"
-    }else if(leftPressed && direction != "e"){ 
-        direction = "w"
-    }else if(downPressed && direction != "n"){
-        direction = "s"
-    }else if(upPressed && direction != "s"){
-        direction = "n"
-    }
+        
     
 }
 
@@ -167,32 +195,24 @@ function Move(){
     if(direction == "e"){
         player.x = player.x+50;
         if(player.x>=canvas.width){
-            console.log("hello1");
-            alert("you hit the side... Your score is: " + score)
             death();
         }
       
     }else if(direction == "w"){
         player.x = player.x-50;
         if(player.x<0){
-            console.log("hello2");
-            alert("you hit the side... Your score is: " + score)
             death();
         }
        
     }else if(direction == "s"){
         player.y = player.y+50; 
         if(player.y>=canvas.height){
-            console.log("hello3");
-            alert("you hit the top... Your score is: " + score)
             death();
         }
         
     }else if(direction == "n"){
         player.y = player.y-50; 
         if(player.y<0){
-            console.log("hello4");
-            alert("you hit the bottom... Your score is: " + score)
             death();
         }
     }
@@ -211,10 +231,24 @@ function Move(){
 }
 
 function death(){
-    console.log("hello");
-    document.location.reload();
-    clearInterval(interval);
+    died = true;
+    hPressed = false;
+    enterPressed = false;
+    once = true;
     clearInterval(interval2);
+    ctx.drawImage(deathScreen,0,0,canvas.width,canvas.height);
+    ctx.fillStyle = "red";
+    ctx.fillText(score, 475, 550);
+    player.x = 350;
+    player.y = 250;
+    moves = [];
+    for(let i = 0; i<1; i++){
+        moves[i] = 0;
+    }
+    score = 0;
+    direction = "e"
+    ctx.fillText("Press enter to try again", 80, 650);
+    
 }
 
 function getX(Index){
@@ -237,6 +271,8 @@ function getY(Index){
         
     } 
 }
-let interval2 = setInterval(Move, 220);
+
+
+
 let interval = setInterval(draw, 5);
 
