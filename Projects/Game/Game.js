@@ -190,7 +190,8 @@ let player = new Player(100,75,20,1.8);
 class Enemy extends Player{
     constructor(x,y,r,s){
         super(x,y,r,s);
-       
+        this.dx = 2;
+        this.dy = 2;
     }
 
     draw(){
@@ -210,11 +211,32 @@ class Enemy extends Player{
    
     }
 
+    move(){
+        if(!timeStop){
+            var vx = player.x - this.x;
+            var vy = player.y - this.y;
+
+            var dist = Math.sqrt(vx * vx + vy * vy);
+            this.dx = vx / dist;
+            this.dy = vy / dist;
+            this.once = false;
+            
+
+
+            this.dx *= this.s;
+            this.dy *= this.s;
+
+            this.x += this.dx;
+            this.y += this.dy;
+        }
+        
+    }
+
 
 
 }
 
-let enemy = new Enemy(100,150,20,1.8)
+let enemy = new Enemy(100,150,20,0.5)
 
 class Obstacle{
     constructor(x,y,w,h){
@@ -234,22 +256,27 @@ class Obstacle{
         if(entity.y + entity.r>this.y && entity.y-entity.r<this.y+this.h && entity.x+entity.r>this.x && entity.x-entity.r<this.x+this.w){
             if(entity instanceof Bullet){
                 entity.isVisible = false;
-            }
+            }else {
 
-            if(entity.y-entity.r<this.y+this.h && entity.y-entity.r>this.y && entity.x - entity.r>this.x && entity.x + entity.r<this.x + this.w ){
-                entity.y = this.y+this.h+entity.r;
-                console.log("out bottom")
-            }else if(entity.y+entity.r>this.y && entity.x - entity.r>this.x && entity.x + entity.r<this.x + this.w){
-                entity.y = this.y-entity.r
-                console.log("out top")
-            }else if(entity.x-entity.r<this.x+this.w &&entity.x-entity.r>this.x && entity.y-entity.r>this.y && entity.y+entity.r<this.y+this.h){
-                entity.x = this.x+this.w+entity.r
-                console.log("out right")
-            }else if(entity.x+entity.r>this.x && entity.y-entity.r>this.y && entity.y+entity.r<this.y+this.h){
-                entity.x = this.x-entity.r;
-                console.log("out left")
-            }
+                if(entity.y-entity.r<this.y+this.h && entity.y-entity.r>this.y && entity.x>this.x && entity.x <this.x + this.w ){
+                 
+                        entity.y = this.y+this.h+entity.r;
+                        console.log("out bottom")
+                    
+                    
+                }else if(entity.y+entity.r>this.y && entity.x>this.x && entity.x<this.x + this.w){
+                    entity.y = this.y-entity.r
+                    console.log("out top")
+                }else if(entity.x-entity.r<this.x+this.w &&entity.x-entity.r>this.x && entity.y>this.y && entity.y<this.y+this.h){
+                    entity.x = this.x+this.w+entity.r
+                    console.log("out right")
+                }else if(entity.x+entity.r>this.x && entity.y>this.y && entity.y<this.y+this.h){
+                    entity.x = this.x-entity.r;
+                    console.log("out left")
+                }
         }
+            }
+                
 
 
 
@@ -347,8 +374,8 @@ function main(){
     player.draw();
     player.move();
     player.drawBullets();
-    enemy.draw();
-    enemy.drawBullets();
+    //enemy.draw();
+    //enemy.drawBullets();
     tempOb.draw();
     tempOb.collision(player);
 
@@ -360,6 +387,9 @@ function main(){
     for(let i = 0; i<enemy.b.length; i++){
         tempOb.collision(enemy.b[i]);
     }
+
+    //enemy.move();
+    //tempOb.collision(enemy)
     
 }
 
