@@ -25,9 +25,12 @@ class Square{
         if(!this.isVisible){
             ctx.fillStyle = "grey";
             ctx.fillRect(this.x+1,this.y+1, this.w-1, this.h-1);   
+        }else if(this.hasMine){
+            ctx.fillStyle = "blue";
+            ctx.fillRect(this.x+1,this.y+1, this.w-1, this.h-1);  
         }else{
             ctx.fillStyle = "red";
-            ctx.fillText(this.numMines + "", this.x+(this.w/2), this.y+(this.h/2))
+            ctx.fillText(this.numMines + "", this.x+(this.w/2-8), this.y+(this.h/2+8))
         }
              
          
@@ -35,30 +38,62 @@ class Square{
     }
 
     checkcollision(){
+        if(this.hasMine){
+            if((mousex>=this.x && mousex<=this.x+this.w)&& (mousey>=this.y && mousey<=(this.y+this.h)) ){
+                
+            }
+        }else{
+            if((mousex>=this.x && mousex<=this.x+this.w)&& (mousey>=this.y && mousey<=(this.y+this.h)) ){
+                this.isVisible = true;
+                
 
+            }
+        }
     }
 
 }
 
 document.addEventListener("mousedown", mouseDownHandler, false);
-//document.addEventListener("mouseup", mouseUphandler, false);
 function mouseDownHandler(e){
-    mousex = e.screenX;
-    mousey = e.screenY;
+    var rect = canvas.getBoundingClientRect();
+    
+        mousex = e.clientX - rect.left
+        mousey = e.clientY - rect.top
+    
 }
 
 function main(){
-    drawSquares();
+
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        drawSquares();
+        checkHit();
+    
+    
 }
 
 function makeSquares(){
     for(let x = 0; x<canvas.width; x+=50){
         for(let y = 0; y<canvas.height; y+=50){
-            let a = new Square(x,y,50,50,true,false);
-            sqaures.push(a);
+            let ran = Math.round(Math.random()*10);
+            if(ran == 5){
+                let a = new Square(x,y,50,50,true,true);
+                sqaures.push(a);
+            }else{
+                let a = new Square(x,y,50,50,false,false);
+                sqaures.push(a);
+            }
+            
+           
         }
     }
 }
+
+function checkHit(){
+    for(let i = 0; i<sqaures.length; i++){
+        sqaures[i].checkcollision();
+    }
+}
+
 makeSquares();
 function drawSquares(){
     for(let i = 0; i<sqaures.length; i++){
@@ -67,4 +102,4 @@ function drawSquares(){
     }
 }
 
-setInterval(main, 5);
+let int = setInterval(main, 5)

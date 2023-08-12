@@ -1,0 +1,30 @@
+Game where its like super hot except time stops for a alimited time and you can move aroudn the room to get a better advantage
+
+
+
+10-20 levels, each with mroe enimes and other shit like obstacles 
+
+time will stop when you press spacce for a alimited amount of time 2 seconds where only you can move
+
+maybe make a shop to get different guns you can use
+
+Different types of enimes:
+Wall bouncing enimes
+enimes that only slow down when you stop time
+enimes with different type guns (shotguns, machine guns, sniper rifles)
+
+
+possible cool effect like david martinex in cyberpunk edgerunners is that you see copy of yourself when time is stopped
+Steps to game completion:
+1. Create classes for:
+    Player
+    enemies
+    walls
+    bullets
+
+2. Make functional:
+    player shoots bullets
+    enimes shoot bullets
+    time being stopped
+    can move from holding back like golfinity on poki.com (https://developer.mozilla.org/en-US/docs/Web/API/Element/mousemove_event use shit on this website)
+
