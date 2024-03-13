@@ -17,6 +17,7 @@ class Square{
         this.arrX;
         this.arrY;
         this.numMines;
+        this.isVisited;
     }  
     draw(){
         ctx.fillStyle = "black";
@@ -45,7 +46,7 @@ class Square{
             if((mousex>=this.x && mousex<=this.x+this.w)&& (mousey>=this.y && mousey<=(this.y+this.h)) ){
                 this.isVisible = true;
                 if(this.numMines == 0){
-                    
+                    clearMinesAroundWithZero(this.arrX, this.arrY)
                     
                 }
 
@@ -95,7 +96,7 @@ function makeSquares(){
 
 }
 
-function minesAround(x,y, clear){
+function minesAround(x,y){
     const MINES_AROUND = 8;
     let numMines = 0;
         for(let i = 0; i<MINES_AROUND; i++){
@@ -103,36 +104,27 @@ function minesAround(x,y, clear){
                 switch (i) {
                     case 0:
                         numMines = sqaures[x-1][y-1].hasMine?numMines+1:numMines
-                        clear && !sqaures[x-1][y-1].hasMine?sqaures[x-1][y-1].isVisible = true:null 
                         break;
                     case 1:
                         numMines = sqaures[x][y-1].hasMine?numMines+1:numMines
-                        clear && !sqaures[x][y-1].hasMine?sqaures[x][y-1].isVisible = true:null 
                         break;
                     case 2:
                         numMines = sqaures[x+1][y-1].hasMine?numMines+1:numMines
-                        clear && !sqaures[x+1][y-1].hasMine?sqaures[x+1][y-1].isVisible = true:null 
                         break;
                     case 3:
                         numMines = sqaures[x-1][y].hasMine?numMines+1:numMines
-                        clear && !sqaures[x-1][y].hasMine?sqaures[x-1][y].isVisible = true:null 
                         break;
                     case 4:
                         numMines = sqaures[x+1][y].hasMine?numMines+1:numMines
-                        clear && !sqaures[x+1][y].hasMine?sqaures[x+1][y].isVisible = true:null 
-                       
                         break;
                     case 5:
                         numMines = sqaures[x-1][y+1].hasMine?numMines+1:numMines
-                        clear && !sqaures[x-1][y+1].hasMine?sqaures[x-1][y+1].isVisible = true:null 
                         break;
                     case 6:
                         numMines = sqaures[x][y+1].hasMine?numMines+1:numMines
-                        clear&& !sqaures[x][y+1].hasMine?sqaures[x][y+1].isVisible = true:null 
                         break;
                     case 7:
                         numMines = sqaures[x+1][y+1].hasMine?numMines+1:numMines
-                        clear&& !sqaures[x+1][y+1].hasMine?sqaures[x+1][y+1].isVisible = true:null 
                         break;
                     }
             }catch{
@@ -142,6 +134,46 @@ function minesAround(x,y, clear){
         }
     
     return numMines;
+}
+
+function clearMinesAroundWithZero(x,y){
+    if (sqaures[x][y].visited) return; // If already visited, return
+    sqaures[x][y].visited = true
+  for (let i = 0; i < 8; i++) {
+    try{
+        switch (i) {
+            case 0:
+                sqaures[x-1][y-1].numMines == 0 ?(sqaures[x-1][y-1].isVisible = true, clearMinesAroundWithZero(x-1,y-1)):sqaures[x-1][y-1].isVisible = true;
+                break;
+            case 1:
+                sqaures[x][y-1].numMines == 0?(sqaures[x][y-1].isVisible = true,clearMinesAroundWithZero(x,y-1)):sqaures[x][y-1].isVisible = true
+                break;
+            case 2:
+                sqaures[x+1][y-1].numMines == 0?(sqaures[x+1][y-1].isVisible = true,clearMinesAroundWithZero(x+1,y-1)):sqaures[x+1][y-1].isVisible = true
+                break;
+            case 3:
+                sqaures[x-1][y].numMines == 0?(sqaures[x-1][y].isVisible = true,clearMinesAroundWithZero(x-1,y)):sqaures[x-1][y].isVisible = true
+                break;
+            case 4:
+                sqaures[x+1][y].numMines == 0?(sqaures[x+1][y].isVisible = true,clearMinesAroundWithZero(x+1,y)):sqaures[x+1][y].isVisible = true
+                break;
+            case 5:
+                sqaures[x-1][y+1].numMines == 0?(sqaures[x-1][y+1].isVisible = true,clearMinesAroundWithZero(x-1,y+1)):sqaures[x-1][y+1].isVisible = true
+                break;
+            case 6:
+                sqaures[x][y+1].numMines == 0?(sqaures[x][y+1].isVisible = true,clearMinesAroundWithZero(x,y+1)):sqaures[x][y+1].isVisible = true
+                break;
+            case 7:
+                sqaures[x+1][y+1].numMines == 0?(sqaures[x+1][y+1].isVisible = true,clearMinesAroundWithZero(x+1,y+1)):sqaures[x+1][y+1].isVisible = true
+                break;
+            }
+    }catch{
+        continue;
+    }
+    
+  }
+  return 0;
+    
 }
 
 function checkHit(){
@@ -167,7 +199,7 @@ function drawSquares(){
     if(once){
        for(let i = 0; i<sqaures.length; i++){
             for(let z = 0; z<sqaures[i].length; z++){
-                sqaures[i][z].numMines = minesAround(i,z, false);
+                sqaures[i][z].numMines = minesAround(i,z);
                 
             }
         } 
