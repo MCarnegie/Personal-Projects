@@ -64,6 +64,7 @@ class Square{
                         clearMinesAroundWithZero(this.arrX, this.arrY)
                     }
                     isLeftDown = false;
+                    checkWin();
                 }else if(!this.marked && isRightDown){
                     this.marked = true;
                     isRightDown = false;
@@ -77,6 +78,7 @@ class Square{
                 // console.log(
                 //     `this is at X:${this.arrX} Y:${this.arrY}, is it marked: ${this.marked}, is right down: ${isRightDown}, is left down: ${isLeftDown}`
                 // )
+                
                 
         }
 
@@ -119,7 +121,6 @@ function main(){
         ctx.clearRect(0,0,canvas.width,canvas.height);
         drawSquares();
         checkHit();
-        checkWin();
     
 }
 
