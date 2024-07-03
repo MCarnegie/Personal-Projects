@@ -1,2 +1,2 @@
-# Funny-Stuff
-Whenever i am bored and want to make a new project i will do it here
+# Personal Projects
+Any Passion Projects that i decide to create will be here
