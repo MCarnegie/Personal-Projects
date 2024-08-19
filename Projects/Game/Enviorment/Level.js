@@ -6,23 +6,27 @@ export default class Level{
         this.rooms = rooms
         this.size = size
         this.layout = []
+        this.pStart = {x:Math.floor(size/2), y:Math.floor(size/2)}
 
     }
 
-    makeLevel(){
+    makeEmptyLevel(){
         for(let i = 0; i<this.size; i++){
             let arr = []
             for(let z = 0; z<this.size; z++){
-                arr.push(0)
+                arr.push("NR")
             }
             this.layout.push(arr)
         }
 
-        for(let i = 0; i<this.rooms.length; i++){
+        // if(this.rooms.length>0){
+        //      for(let i = 0; i<this.rooms.length; i++){
                     
-            console.log(this.rooms[i].location.x)
-            this.layout[this.rooms[i].location.y][this.rooms[i].location.x] = this.rooms[i]
-        }
+
+        //     this.layout[this.rooms[i].location.y][this.rooms[i].location.x] = this.rooms[i]
+        //     }
+        // }
+       
         
     }
 }

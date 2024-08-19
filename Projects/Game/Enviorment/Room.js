@@ -6,7 +6,7 @@ export default class Room{
         this.name = name
         this.enemys = enemys
         this.obstacles = obstacles
-        this.location = location
+
     }
 
     draw(){

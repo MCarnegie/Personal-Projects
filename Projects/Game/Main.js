@@ -6,18 +6,23 @@ import  Player  from "http://127.0.0.1:5500/Game/Entities/Player.js";
 import Obstacle from "http://127.0.0.1:5500/Game/Enviorment/Obstacle.js";
 import Room from "http://127.0.0.1:5500/Game/Enviorment/Room.js";
 import Level from "http://127.0.0.1:5500/Game/Enviorment/Level.js";
+import makeNewLevel from "http://127.0.0.1:5500/Game/Generator/LevelGenerator.js";
 
 
-let testLevel = new Level([
-    new Room("test1", [], [new Obstacle(200, 100, 100 ,200, "pink")], {x:1, y:1}), 
-    new Room("test2", [], [new Obstacle(400, 100, 400 ,100, "blue")], {x:1, y:2}), 
-    new Room("test3", [], [new Obstacle(200, 200, 100 ,400, "green")], {x:1, y:0}), 
-    new Room("test4", [], [new Obstacle(100, 100, 200 ,100, "black")], {x:2, y:1}), 
-    new Room("test5", [], [new Obstacle(800, 100, 100 ,100, "orange")], {x:0, y:1}),
+// let testLevel = new Level([
+//     new Room("test1", [], [new Obstacle(200, 100, 100 ,200, "pink")], {x:1, y:1}), 
+//     new Room("test2", [], [new Obstacle(400, 100, 400 ,100, "blue")], {x:1, y:2}), 
+//     new Room("test3", [], [new Obstacle(200, 200, 100 ,400, "green")], {x:1, y:0}), 
+//     new Room("test4", [], [new Obstacle(100, 100, 200 ,100, "black")], {x:2, y:1}), 
+//     new Room("test5", [], [new Obstacle(800, 100, 100 ,100, "orange")], {x:0, y:1}),
     
-], 10)
+// ], 10)
 
-let player = new Player(100, 200, {x:1, y:1})
+/*number for level size will be squared cause its in a square shape
+like if you put 5, it will be a 5x5 layout*/
+let testLevel = makeNewLevel(8, 20)
+
+let player = new Player(100, 200, testLevel.pStart)
 
 document.addEventListener("keydown", (e)=>{
     if (e.key == "S" || e.key == "s") {
@@ -48,7 +53,6 @@ document.addEventListener("keyup", (e) =>{
 // let a = new Obstacle(200, 100, 100 ,100)
 
 console.log(testLevel.rooms)
-testLevel.makeLevel()
 console.log(testLevel.layout)
 function main(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
