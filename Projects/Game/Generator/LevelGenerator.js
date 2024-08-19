@@ -23,9 +23,19 @@ const directions = [
     { x: 0, y: -1 }  // Up
 ];
 
+/*TO FIX: to make this work make it restart the program 
+
+Condtions to restart:
+
+Room array is not zero
+Count amount of rooms in layout, if it is not equal to size restart
+
+
+*/
+
 export default function makeNewLevel(){
     size = 8 /*will be level that player is at at some point*/
-    roomArr = makeRooms(11)
+    roomArr = makeRooms(size)
     /*makeRooms(Math.round((Math.random()*2)+1) + 5 + level * 2.6)*/
     queue = []
     le = new Level(roomArr, size)
@@ -36,10 +46,10 @@ export default function makeNewLevel(){
     
  
     
-    while(queue.length>0 && roomArr.length>0){
+    while(queue.length>0){
 
         
-        console.log(le.layout)
+     
             let r = queue.shift()
 
             if(!r.Vistied){
@@ -52,6 +62,7 @@ export default function makeNewLevel(){
 
 
 
+
     
 
 
@@ -61,6 +72,8 @@ export default function makeNewLevel(){
     
 
 }
+
+
 
 /*
 
@@ -94,7 +107,9 @@ function Visit(r){
         if(!a){
             continue;
         }else if(Math.round((Math.random()*100)+1)<50){
-            continue
+            continue;
+        }else if(roomArr.length<=0){
+            return;
         }else{
            le.layout[a.x][a.y] = roomArr[0]
             queue.push({x: a.x, y:a.y})
@@ -130,10 +145,14 @@ function checkNumNeighbours(x,y){
     for(let i = 0; i<4; i++){
         let dx = directions[i].x
         let dy = directions[i].y
-
-        if(le.layout[y+dy][x+dx] instanceof Room){
-            num++;
+        try {
+            if(le.layout[y+dy][x+dx] instanceof Room){
+                num++;
+            }
+        } catch (error) {
+            num++
         }
+       
     }
 
     return num;
