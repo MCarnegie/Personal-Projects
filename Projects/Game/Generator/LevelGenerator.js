@@ -33,44 +33,62 @@ Count amount of rooms in layout, if it is not equal to size restart
 
 */
 
+/*stop while loop when
+
+roomArr.length = 0
+checkLayout = true
+
+*/
+
 export default function makeNewLevel(){
-    size = 8 /*will be level that player is at at some point*/
-    roomArr = makeRooms(size)
-    /*makeRooms(Math.round((Math.random()*2)+1) + 5 + level * 2.6)*/
-    queue = []
+    size = 10 /*will be level that player is at at some point*/
+
     le = new Level(roomArr, size)
     le.makeEmptyLevel()
-    le.layout[le.pStart.y][le.pStart.x] = roomArr[0]
-    queue[0] = {y: le.pStart.y, x:le.pStart.x, Vistied: false}
-    roomArr.shift()
-    
- 
-    
-    while(queue.length>0){
 
-        
-     
-            let r = queue.shift()
-
-            if(!r.Vistied){
-                Visit(r)
-                r.Vistied = true
-            }
-        
+    
+    let attempts = 0;
+    while (!checkLayout(le.layout)) {
+        generateLayout()
+        if(attempts>100)
+            break;
+        attempts++;
         
     }
-
-
-
-
+    console.log(attempts)
+  
     
 
 
 
     return le;
+    
 
     
 
+}
+
+function generateLayout(){
+    le.makeEmptyLevel()
+    roomArr = makeRooms(size)
+    queue = []
+    le.layout[le.pStart.y][le.pStart.x] = roomArr[0]
+    queue[0] = {y: le.pStart.y, x:le.pStart.x, Vistied: false}
+    roomArr.shift()
+
+    while(queue.length>0){
+
+        
+     
+        let r = queue.shift()
+
+        if(!r.Vistied){
+            Visit(r)
+            r.Vistied = true
+        }
+    
+    
+    }
 }
 
 
@@ -109,7 +127,7 @@ function Visit(r){
         }else if(Math.round((Math.random()*100)+1)<50){
             continue;
         }else if(roomArr.length<=0){
-            return;
+            continue
         }else{
            le.layout[a.x][a.y] = roomArr[0]
             queue.push({x: a.x, y:a.y})
@@ -156,4 +174,19 @@ function checkNumNeighbours(x,y){
     }
 
     return num;
+}
+
+function checkLayout(layout){
+    let num = 0;
+    for(let i = 0; i<layout.length; i++){
+        for(let z = 0; z<layout[i].length; z++){
+            if(layout[i][z] instanceof Room)
+                    num++
+        }
+    }
+    console.log(`Number of rooms: ${num}, Expected size: ${size}`);
+    if(num == size)
+        return true
+    else
+        return false
 }

@@ -11,6 +11,7 @@ export default class Level{
     }
 
     makeEmptyLevel(){
+        this.layout = []
         for(let i = 0; i<this.size; i++){
             let arr = []
             for(let z = 0; z<this.size; z++){
@@ -19,14 +20,7 @@ export default class Level{
             this.layout.push(arr)
         }
 
-        // if(this.rooms.length>0){
-        //      for(let i = 0; i<this.rooms.length; i++){
-                    
-
-        //     this.layout[this.rooms[i].location.y][this.rooms[i].location.x] = this.rooms[i]
-        //     }
-        // }
-       
+   
         
     }
 }
