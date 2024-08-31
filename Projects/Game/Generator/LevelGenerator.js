@@ -4,6 +4,7 @@ var ctx = canvas.getContext("2d");
 import Level from "http://127.0.0.1:5500/Game/Enviorment/Level.js";
 import Room from "http://127.0.0.1:5500/Game/Enviorment/Room.js";
 import makeRooms from "http://127.0.0.1:5500/Game/Generator/RoomGenerator.js";
+import Obstacle from "http://127.0.0.1:5500/Game/Enviorment/Obstacle.js";
 
 /*should return a level*/
 /*makes a level by randomly placing special rooms and regular rooms into a layout
@@ -61,8 +62,7 @@ export default function makeNewLevel(){
     }
     console.log(attempts)
 
-    console.log("end rooms:")
-    console.log(endRooms)
+    
 
   
     
@@ -136,13 +136,10 @@ function Visit(r){
     for(let z = 0; z<arr.length; z++){
         let a = arr[z]
         if(!a){
-            console.log(r)
             continue;
         }else if(Math.round((Math.random()*100)+1)<50){
-            console.log(r)
             continue;
         }else if(roomArr.length<=0){
-            console.log(r)
             continue;
         }else{
            le.layout[a.x][a.y] = roomArr[0]
@@ -209,25 +206,54 @@ function checkLayout(layout){
 }
 
 function editBarriers(layout){
+    console.log(layout)
     for(let i = 0; i<layout.length; i++){
         for(let z = 0; z<layout[i].length; z++){
             if(layout[i][z] instanceof Room)
-                addIfNeighbourEmpty(z,i, layout[i][z])
+                layout[i][z] = addBarrierIfNeighbourEmpty(z,i, layout[i][z])
         }
     }
 }
 
-function addIfNeighbourEmpty(x, y, r){
+function addBarrierIfNeighbourEmpty(x, y, r){
     for(let i = 0; i<4; i++){
         let dx = directions[i].x
         let dy = directions[i].y
+       
         try {
-            if(le.layout[y+dy][x+dx] instanceof Room){
-                r.eN[i] = false
+            if( !(le.layout[y+dy][x+dx] instanceof Room)){
+              switch (i) {
+                case 0:
+                    r.obstacles.push(new Obstacle(canvas.width-8,250,8,canvas.height/3,"red"))
+                break;
+
+                case 1:
+                    r.obstacles.push(new Obstacle(0,250,8,canvas.height/3,"red"))
+                break;
+
+                case 2:
+                    r.obstacles.push(new Obstacle(317,canvas.height-8,canvas.width/3,8,"red"))
+                break;
+
+                case 3:
+                    r.obstacles.push(new Obstacle(317,0,canvas.width/3,8,"red"))
+                break;
+              
+              
+              }
+                    
+               
             }
         } catch (error) {
-            r.eN[i] = false
+            console.log(error)
         }
        
     }
+
+    return r
 }
+
+//new Obstacle(317,0,canvas.width/3,8,"red"), up
+ // new Obstacle(317,canvas.height-8,canvas.width/3,8,"red"), down
+    // new Obstacle(0,250,8,canvas.height/3,"red"), left
+      // new Obstacle(canvas.width-8,250,8,canvas.height/3,"red"), right
