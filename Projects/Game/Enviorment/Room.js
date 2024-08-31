@@ -1,11 +1,13 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
+//en means empty neighbours going right, left, down, up
 export default class Room{
-    constructor(name, enemys, obstacles, location){
+    constructor(name, enemys, obstacles){
         this.name = name
         this.enemys = enemys
         this.obstacles = obstacles
+        this.eN = [true,true,true,true]
 
     }
 

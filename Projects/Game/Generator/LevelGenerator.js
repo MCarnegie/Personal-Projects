@@ -14,7 +14,7 @@ let roomArr;
 /*makeRooms(Math.round((Math.random()*2)+1) + 5 + level * 2.6)*/
 let queue;
 let le;
-
+let endRooms = [];
 
 const directions = [
     { x: 1, y: 0 },  // Right
@@ -41,7 +41,10 @@ checkLayout = true
 */
 
 export default function makeNewLevel(){
-    size = 10 /*will be level that player is at at some point*/
+    /*limit for size should not exceed 16 for best and most consistent results
+    if you want bigger doungeons remove the while loop safeguard
+    */
+    size = 8 /*will be level that player is at at some point*/
 
     le = new Level(roomArr, size)
     le.makeEmptyLevel()
@@ -50,12 +53,17 @@ export default function makeNewLevel(){
     let attempts = 0;
     while (!checkLayout(le.layout)) {
         generateLayout()
+
         if(attempts>100)
             break;
         attempts++;
         
     }
     console.log(attempts)
+
+    console.log("end rooms:")
+    console.log(endRooms)
+
   
     
 
@@ -72,6 +80,7 @@ function generateLayout(){
     le.makeEmptyLevel()
     roomArr = makeRooms(size)
     queue = []
+    endRooms = []
     le.layout[le.pStart.y][le.pStart.x] = roomArr[0]
     queue[0] = {y: le.pStart.y, x:le.pStart.x, Vistied: false}
     roomArr.shift()
@@ -89,6 +98,7 @@ function generateLayout(){
     
     
     }
+   
 }
 
 
@@ -108,6 +118,8 @@ function Visit(r){
     
     let arr = []
 
+
+    //get all neighbours around room
     for(let i = 0; i<4; i++){
         let dx = directions[i].x
         let dy = directions[i].y
@@ -115,19 +127,24 @@ function Visit(r){
         if(isOk(r.x + dx, r.y + dy)){
             arr[i] = {x:r.x + dx, y: r.y + dy, Vistied: false}
         }else{
-            arr[i] = false
+            arr[i] = false // dont put room
+            r.eN[i] = true // knowing when a room is empty
         }
     }
-    console.log(arr)
+
+
     //add to queue, make the room, remove that room from room Array
     for(let z = 0; z<arr.length; z++){
         let a = arr[z]
         if(!a){
+            console.log(r)
             continue;
         }else if(Math.round((Math.random()*100)+1)<50){
+            console.log(r)
             continue;
         }else if(roomArr.length<=0){
-            continue
+            console.log(r)
+            continue;
         }else{
            le.layout[a.x][a.y] = roomArr[0]
             queue.push({x: a.x, y:a.y})
@@ -143,9 +160,9 @@ function Visit(r){
 /*Room we looking at if it is ok */
 function isOk(x, y){
     if( (x>= 0 && y>=0) && (x<size && y<size) ){
-        if(le.layout[y][x] instanceof Room)
+        if(le.layout[y][x] instanceof Room){
             return false;
-
+        }
         if(checkNumNeighbours(x, y)>1){
             return false;
         }
@@ -185,8 +202,9 @@ function checkLayout(layout){
         }
     }
     console.log(`Number of rooms: ${num}, Expected size: ${size}`);
-    if(num == size)
+    if(num == size){
         return true
-    else
+    }else
         return false
 }
+
