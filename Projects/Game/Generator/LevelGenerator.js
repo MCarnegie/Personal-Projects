@@ -127,8 +127,7 @@ function Visit(r){
         if(isOk(r.x + dx, r.y + dy)){
             arr[i] = {x:r.x + dx, y: r.y + dy, Vistied: false}
         }else{
-            arr[i] = false // dont put room
-            r.eN[i] = true // knowing when a room is empty
+            arr[i] = false
         }
     }
 
@@ -203,8 +202,32 @@ function checkLayout(layout){
     }
     console.log(`Number of rooms: ${num}, Expected size: ${size}`);
     if(num == size){
+        editBarriers(layout)
         return true
     }else
         return false
 }
 
+function editBarriers(layout){
+    for(let i = 0; i<layout.length; i++){
+        for(let z = 0; z<layout[i].length; z++){
+            if(layout[i][z] instanceof Room)
+                addIfNeighbourEmpty(z,i, layout[i][z])
+        }
+    }
+}
+
+function addIfNeighbourEmpty(x, y, r){
+    for(let i = 0; i<4; i++){
+        let dx = directions[i].x
+        let dy = directions[i].y
+        try {
+            if(le.layout[y+dy][x+dx] instanceof Room){
+                r.eN[i] = false
+            }
+        } catch (error) {
+            r.eN[i] = false
+        }
+       
+    }
+}
