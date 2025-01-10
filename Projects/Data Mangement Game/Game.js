@@ -120,7 +120,7 @@ function main(){
             
             setTimeout(() => {
                 alert("You lost!");
-                playerDied = false;
+                playerDied = true;
                 finishGame();
                 clearInterval(poo);  // Stop any running interval
                 location.reload();   // Reload the page
@@ -231,9 +231,11 @@ function finishGame() {
 
     let numVisible = getNumVisible();
     localStorage.setItem(`Trial ${trialNum}`, `${numVisible}, ${numVisible>=27?5:numVisible>=20?2:numVisible>=10?1.5:"no multiplier"}
-        , [${diceNums}] `)
+        , [${diceNums}], ${playerDied} `)
     
     localStorage.setItem('trialNum', trialNum)
+
+    location.reload()
 
     
 }
