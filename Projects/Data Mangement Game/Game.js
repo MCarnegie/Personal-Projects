@@ -147,12 +147,13 @@ function makeSquares(){
         sqaures.push(squaresY)
     }
 
-    for(let i = 0; i<3; i++){
+    //places mines
+    for(let i = 0; i<8; i++){
         let x = Math.round(Math.random()*5) //get randoms corrdinates
         let y = Math.round(Math.random()*5)
-        // console.log(x)
-        // console.log(y)
-        // console.log(sqaures[y][x])
+        console.log(x)
+        console.log(y)
+        console.log(sqaures[y][x])
         minesOn++;
         sqaures[y][x].hasMine = true
     }
@@ -230,7 +231,9 @@ function finishGame() {
     trialNum++
 
     let numVisible = getNumVisible();
-    localStorage.setItem(`Trial ${trialNum}`, `${numVisible}, ${numVisible>=27?5:numVisible>=20?2:numVisible>=10?1.5:"no multiplier"}
+    //will look like this: Trial #, Number visible, Multiplier applied, Dice number rolled, if they lost
+    localStorage.setItem(`Trial ${trialNum}`, `${numVisible}, ${diceNums[0]==1?1.5:diceNums[0]==2?2:diceNums[0]==3?2.5:
+        diceNums[0]==4?3:diceNums[0]==5?3.5:diceNums[0]==6?4:0}
         , [${diceNums}], ${playerDied} `)
     
     localStorage.setItem('trialNum', trialNum)
